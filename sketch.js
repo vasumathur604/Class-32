@@ -7,12 +7,13 @@ var engine, world;
 var box1, pig1,pig3;
 var backgroundImg,platform;
 var bird, slingshot;
-var score=0;
 
 var gameState = "onSling";
-var bg="sprites/bg.png";
+var bg = "sprites/bg1.png";
+var score = 0;
+
 function preload() {
-    getBackgroundImg()
+    getBackgroundImg();
 }
 
 function setup(){
@@ -46,14 +47,14 @@ function setup(){
 }
 
 function draw(){
-  
     if(backgroundImg)
         background(backgroundImg);
-        textSize(25)
-  fill("white");
-  text("Score = "+score,width-300,50);
-
-
+    
+        noStroke();
+        textSize(35)
+        fill("white")
+        text("Score  " + score, width-300, 50)
+    
     Engine.update(engine);
     //strokeWeight(4);
     box1.display();
@@ -61,7 +62,6 @@ function draw(){
     ground.display();
     pig1.display();
     pig1.score();
-
     log1.display();
 
     box3.display();
@@ -81,36 +81,43 @@ function draw(){
 }
 
 function mouseDragged(){
-    if (gameState!=="launched"){
+    //if (gameState!=="launched"){
         Matter.Body.setPosition(bird.body, {x: mouseX , y: mouseY});
-    }
+    //}
 }
 
 
 function mouseReleased(){
     slingshot.fly();
     gameState = "launched";
+    
+
 }
 
 function keyPressed(){
     if(keyCode === 32){
-       // slingshot.attach(bird.body);
+       slingshot.attach(bird.body);
+       Matter.Body.setPosition(bird.body, {x: 200, y: 50});
+
+
+       bird.trajectory=[];
     }
 }
 
 async function getBackgroundImg(){
-    var response = await fetch("https://worldtimeapi.org/api/timezone/Asia/kolkata");
-  var  responseJSON = await response.json();
-  
-  var datetime = responseJSON.datetime;
-  var hour = datetime.slice(11,13);
+    var response = await fetch("http://worldtimeapi.org/api/timezone/Asia/Kolkata");
+    var responseJSON = await response.json();
 
-  if(hour>=0600 && hour<=1900){
-      bg="sprites/bg.png"
-  }
-  else {
-      bg="sprites/bg2.jpg"
-  }
- backgroundImg=loadImage(bg)
-  console.log(backgroundImg)
+    var datetime = responseJSON.datetime;
+    var hour = datetime.slice(11,13);
+    
+    if(hour>=0600 && hour<=1900){
+        bg = "sprites/bg1.png";
+    }
+    else{
+        bg = "sprites/bg2.jpg";
+    }
+
+    backgroundImg = loadImage(bg);
+    console.log(backgroundImg);
 }
